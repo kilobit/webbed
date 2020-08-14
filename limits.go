@@ -6,6 +6,8 @@ import _ "fmt"
 import _ "errors"
 import "net/http"
 
+var defaultMaxBytes int64 = 1 << 20 // 1MB
+
 // Set particular limits on the inbound requests.
 //
 // Currently supports the MaxBytes for the req.Body.
@@ -24,10 +26,10 @@ func (lh HTTPLimitsHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) 
 	lh.handler.ServeHTTP(w, req)
 }
 
-func NewHTTPLimitsHandler(handler http.Handler, maxBytes int64) *HTTPLimitsHandler {
+func NewHTTPLimitsHandler(handler http.Handler) *HTTPLimitsHandler {
 
 	return &HTTPLimitsHandler{
-		maxBytes,
+		defaultMaxBytes,
 		handler,
 	}
 }
