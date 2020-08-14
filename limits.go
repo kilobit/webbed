@@ -15,7 +15,7 @@ import "net/http"
 //
 type HTTPLimitsHandler struct {
 	MaxBytes int64
-	handler http.Handler
+	handler  http.Handler
 }
 
 func (lh HTTPLimitsHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {

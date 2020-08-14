@@ -17,10 +17,10 @@ type HTTPListener struct {
 func NewHTTPListener(ctx context.Context, addr string) (*HTTPListener, error) {
 
 	config := &net.ListenConfig{
-		Control: nil,
+		Control:   nil,
 		KeepAlive: 30 * time.Second,
 	}
-	
+
 	ln, err := config.Listen(ctx, "tcp", addr)
 	if err != nil {
 		return nil, err
@@ -35,14 +35,14 @@ type Server struct {
 }
 
 func NewHTTPServer(ctx context.Context, handler http.Handler) (*Server, error) {
-	
+
 	srv := http.Server{
-		Handler: handler,
-		ReadTimeout:  5 * time.Second,
+		Handler:           handler,
+		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		IdleTimeout:  120 * time.Second,
-		MaxHeaderBytes: 1 << 19, // 500 KB
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       120 * time.Second,
+		MaxHeaderBytes:    1 << 19, // 500 KB
 	}
 
 	return &Server{ctx, srv}, nil
