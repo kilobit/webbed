@@ -16,13 +16,13 @@ var defaultMaxBytes int64 = 1 << 20 // 1MB
 // TODO: Implement per IP rate limiting.
 //
 type HTTPLimitsHandler struct {
-	MaxBytes int64
+	maxBytes int64
 	handler  http.Handler
 }
 
 func (lh HTTPLimitsHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
-	req.Body = http.MaxBytesReader(w, req.Body, lh.MaxBytes)
+	req.Body = http.MaxBytesReader(w, req.Body, lh.maxBytes)
 	lh.handler.ServeHTTP(w, req)
 }
 
