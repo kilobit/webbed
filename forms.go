@@ -1,6 +1,5 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
-// Accept HTTP Form Data and forward it as an email.
 package informed
 
 import "fmt"
