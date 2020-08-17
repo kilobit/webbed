@@ -5,6 +5,7 @@ package informed_test
 
 import _ "fmt"
 import _ "errors"
+import "context"
 import "strings"
 import "io/ioutil"
 import "net/url"
@@ -43,7 +44,7 @@ func TestHTTPFormHandlerPost(t *testing.T) {
 
 		t.Log(data.desc)
 
-		f := informed.FormHandlerFunc(func(values url.Values) (int, error) {
+		f := informed.FormHandlerFunc(func(ctx context.Context, values url.Values) (int, error) {
 			assert.ExpectDeep(t, data.values, values)
 			return 0, nil
 		})
@@ -69,7 +70,7 @@ func TestHTTPFormHandlerGet(t *testing.T) {
 
 		t.Log(data.desc)
 
-		f := informed.FormHandlerFunc(func(values url.Values) (int, error) {
+		f := informed.FormHandlerFunc(func(ctx context.Context, values url.Values) (int, error) {
 			assert.ExpectDeep(t, data.values, values)
 			return 0, nil
 		})
