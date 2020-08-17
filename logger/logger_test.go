@@ -21,8 +21,8 @@ func TestLogger(t *testing.T) {
 
 	lg := logger.New(log.Writer())
 	lg.SetParams("map", "fooer")
-	lg.SetField("txid", logger.UUIDL4FieldHandler)
-	lg.SetField("timestamp", logger.TimestampHandler)
+	lg.SetField("txid", logger.UUIDL4Field)
+	lg.SetField("timestamp", logger.TimestampField)
 
 	values := url.Values{}
 

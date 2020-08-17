@@ -12,12 +12,12 @@ import "encoding/json"
 
 type FieldHandler func() interface{}
 
-func UUIDL4FieldHandler() interface{} {
+func UUIDL4Field() interface{} {
 	uuid, _ := newUUID()
 	return uuid
 }
 
-func TimestampHandler() interface{} {
+func TimestampField() interface{} {
 	return time.Now()
 }
 
@@ -74,12 +74,14 @@ func (lg Logger) Log(message interface{}, params ...interface{}) {
 	}
 
 	// Add extra params to the extras.
-	m[lg.extrasName] = params[len(lg.params):]
+	if len(params) > len(lg.params) {
+		m[lg.extrasName] = params[len(lg.params):]
+	}
 
 	m[lg.messageName] = message
 
 	bs, err := lg.enc(m)
-	_, err = lg.w.Write(bs)
+	_, err = fmt.Fprintln(lg.w, string(bs))
 	lg.ehandler(err)
 }
 
