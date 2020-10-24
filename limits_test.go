@@ -1,7 +1,7 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
-// Tests for the informed package.
-package informed_test
+// Tests for the webbed package.
+package webbed_test
 
 import _ "fmt"
 import _ "errors"
@@ -13,7 +13,7 @@ import _ "net/url"
 import "net/http"
 import "net/http/httptest"
 import "testing"
-import "kilobit.ca/go/informed"
+import "kilobit.ca/go/webbed"
 import "kilobit.ca/go/tested/assert"
 
 func TestLimitsTest(t *testing.T) {
@@ -73,7 +73,7 @@ func TestHTTPLimitsHandler(t *testing.T) {
 			}
 		})
 
-		lh := informed.NewHTTPLimitsHandler(handler)
+		lh := webbed.NewHTTPLimitsHandler(handler)
 
 		srv := httptest.NewServer(lh)
 		defer srv.Close()

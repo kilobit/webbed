@@ -1,7 +1,7 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
-// Tests for the informed package.
-package informed_test
+// Tests for the webbed package.
+package webbed_test
 
 import _ "fmt"
 import _ "errors"
@@ -12,7 +12,7 @@ import "net/url"
 import "net/http"
 import "net/http/httptest"
 import "testing"
-import "kilobit.ca/go/informed"
+import "kilobit.ca/go/webbed"
 import "kilobit.ca/go/tested/assert"
 
 func TestFormsTest(t *testing.T) {
@@ -44,12 +44,12 @@ func TestHTTPFormHandlerPost(t *testing.T) {
 
 		t.Log(data.desc)
 
-		f := informed.FormHandlerFunc(func(ctx context.Context, values url.Values) (int, error) {
+		f := webbed.FormHandlerFunc(func(ctx context.Context, values url.Values) (int, error) {
 			assert.ExpectDeep(t, data.values, values)
 			return 0, nil
 		})
 
-		h := informed.NewHTTPFormHandler(f)
+		h := webbed.NewHTTPFormHandler(f)
 
 		srv := httptest.NewServer(h)
 		defer srv.Close()
@@ -70,12 +70,12 @@ func TestHTTPFormHandlerGet(t *testing.T) {
 
 		t.Log(data.desc)
 
-		f := informed.FormHandlerFunc(func(ctx context.Context, values url.Values) (int, error) {
+		f := webbed.FormHandlerFunc(func(ctx context.Context, values url.Values) (int, error) {
 			assert.ExpectDeep(t, data.values, values)
 			return 0, nil
 		})
 
-		h := informed.NewHTTPFormHandler(f)
+		h := webbed.NewHTTPFormHandler(f)
 
 		srv := httptest.NewServer(h)
 		defer srv.Close()

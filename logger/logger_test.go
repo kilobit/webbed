@@ -10,7 +10,7 @@ import "net/url"
 import "testing"
 import "kilobit.ca/go/tested/assert"
 
-import "kilobit.ca/go/informed/logger"
+import "kilobit.ca/go/webbed/logger"
 
 func TestLoggerTest(t *testing.T) {
 
