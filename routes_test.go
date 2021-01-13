@@ -43,6 +43,14 @@ var routestestdata = []struct {
 	},
 
 	{
+		"no path",
+		"",
+		"",
+		"",
+		200,
+	},
+
+	{
 		"not found",
 		"one",
 		"/",
@@ -76,4 +84,29 @@ func TestHTTPRouteHandler(t *testing.T) {
 		_, err := client.Get(_url.String())
 		assert.Ok(t, err)
 	}
+}
+
+func TestNestedHTTPRouteHandler(t *testing.T) {
+
+	handler := http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+
+	nested := webbed.NewHTTPRouteHandler()
+	nested.SetRoute("nested", handler)
+
+	root := webbed.NewHTTPRouteHandler()
+	root.SetRoute("root", nested)
+
+	srv := httptest.NewServer(root)
+	defer srv.Close()
+
+	client := srv.Client()
+
+	u, _ := url.Parse(srv.URL)
+	u.Path = "root/nested"
+
+	resp, err := client.Get(u.String())
+	assert.Ok(t, err)
+	assert.Expect(t, http.StatusOK, resp.StatusCode)
 }
