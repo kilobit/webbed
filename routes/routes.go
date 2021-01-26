@@ -13,8 +13,6 @@ import "strings"
 import _ "net/url"
 import "net/http"
 
-import "kilobit.ca/go/webbed"
-
 type Route struct {
 	nfh http.Handler
 	rs map[string]http.Handler
@@ -29,12 +27,7 @@ func New(notFoundHandler http.Handler) *Route {
 
 func (route Route) Add(path string, handler http.Handler) error {
 
-// 	u, err := url.Parse(path)
-// 	if err != nil {
-// 		return err
-// 	}
-
-	head, rest := webbed.ShiftPath(path)
+	head, rest := ShiftPath(path)
 	isleaf := rest == ""
 	current, hascurrent := route.rs[head]
 
@@ -52,7 +45,6 @@ func (route Route) Add(path string, handler http.Handler) error {
 			subroute.Add("", current)
 			subroute.Add(rest, handler)
 			route.rs[head] = subroute
-			//fmt.Printf("Swap: '%s', '%s'\n%s", head, rest, subroute)
 		}
 		
 	// no current
@@ -74,7 +66,7 @@ func (route Route) Add(path string, handler http.Handler) error {
 func (route Route) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	var head string
-	head, r.URL.Path = webbed.ShiftPath(r.URL.Path)
+	head, r.URL.Path = ShiftPath(r.URL.Path)
 
 	handler, found := route.rs[head]
 	if !found {
@@ -109,4 +101,25 @@ func (route Route) ToString(prefix string) string {
 func (route Route) String() string {
 
 	return route.ToString("")
+}
+
+// Shift a Path element from the URL.
+//
+func ShiftPath(p string) (head, tail string) {
+
+	path := path.Clean(p)
+
+	i := strings.Index(path[1:], "/")
+	if i == -1 {
+		i = len(path) - 1
+	}
+
+	i++
+
+	head, err := url.QueryUnescape(path[1:i])
+	if err != nil {
+		head = path[1:i]
+	}
+
+	return head, path[i:]
 }

@@ -8,7 +8,6 @@ import "io/ioutil"
 import "net/http"
 
 import "kilobit.ca/go/webbed/routes"
-import "kilobit.ca/go/webbed"
 
 import "testing"
 import "net/http/httptest"
@@ -140,7 +139,7 @@ func TestShiftPath(t *testing.T) {
 		
 		for {
 			var path string
-			path, rest = webbed.ShiftPath(rest)
+			path, rest = routes.ShiftPath(rest)
 
 			//t.Log(path, rest)
 
