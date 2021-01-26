@@ -1,4 +1,4 @@
-/* Copyright 2020 Kilobit Labs Inc. */
+/* Copyright 2021 Kilobit Labs Inc. */
 
 package webbed
 
@@ -108,4 +108,13 @@ func (srv Server) Start() <-chan bool {
 	}()
 
 	return done
+}
+
+func StringFromCtx(ctx context.Context, key interface{}) string {
+	str, ok := ctx.Value(key).(string)
+	if !ok {
+		str = ""
+	}
+
+	return str
 }
