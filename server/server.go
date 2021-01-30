@@ -109,4 +109,3 @@ func (srv Server) Start() <-chan bool {
 
 	return done
 }
-

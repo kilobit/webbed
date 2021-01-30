@@ -48,12 +48,12 @@ func TestStringFromCtx(t *testing.T) {
 
 func TestLoadCtxFromEnv(t *testing.T) {
 
-	tests := []struct{
-		env map[string]string
+	tests := []struct {
+		env    map[string]string
 		keymap map[string]interface{}
 	}{
 		{map[string]string{"foo": "bar", "bing": "bang"},
-		 map[string]interface{}{"foo": testKey1, "bing": testKey2}},
+			map[string]interface{}{"foo": testKey1, "bing": testKey2}},
 	}
 
 	for _, test := range tests {
