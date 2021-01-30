@@ -1,12 +1,14 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
-package webbed
+package forms
 
 import "fmt"
 import _ "errors"
 import "context"
 import "net/url"
 import "net/http"
+
+import "kilobit.ca/go/webbed"
 
 // Do something with the form data.
 //
@@ -35,13 +37,13 @@ func (fh HTTPFormHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		ServeError(w, http.StatusBadRequest, fmt.Errorf("Error while parsing the form data, %w", err))
+		webbed.ServeError(w, http.StatusBadRequest, fmt.Errorf("Error while parsing the form data, %w", err))
 		return
 	}
 
 	code, err := fh.handler.Handle(req.Context(), req.Form)
 	if err != nil {
-		ServeError(w, code, fmt.Errorf("Error while processing the form data, %w", err))
+		webbed.ServeError(w, code, fmt.Errorf("Error while processing the form data, %w", err))
 		return
 	}
 
