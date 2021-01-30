@@ -1,7 +1,7 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
 // Tests for the webbed package.
-package webbed_test
+package limits_test
 
 import _ "fmt"
 import _ "errors"
@@ -14,8 +14,10 @@ import "io/ioutil"
 import _ "net/url"
 import "net/http"
 import "net/http/httptest"
+
+import "kilobit.ca/go/webbed/limits"
+
 import "testing"
-import "kilobit.ca/go/webbed"
 import "kilobit.ca/go/tested/assert"
 
 func TestLimitsTest(t *testing.T) {
@@ -75,7 +77,7 @@ func TestHTTPLimitsHandlerMaxBytes(t *testing.T) {
 			}
 		})
 
-		lh := webbed.NewHTTPLimitsHandler(handler)
+		lh := limits.NewHTTPLimitsHandler(handler)
 
 		srv := httptest.NewServer(lh)
 		defer srv.Close()
@@ -92,12 +94,12 @@ func TestHTTPLimitsHandlerMaxBytes(t *testing.T) {
 	}
 }
 
-var exceededLimit webbed.LimitFunc = func(w http.ResponseWriter, req *http.Request) bool {
+var exceededLimit limits.LimitFunc = func(w http.ResponseWriter, req *http.Request) bool {
 	w.WriteHeader(http.StatusBadRequest)
 	return false
 }
 
-var allowedLimit webbed.LimitFunc = func(w http.ResponseWriter, req *http.Request) bool {
+var allowedLimit limits.LimitFunc = func(w http.ResponseWriter, req *http.Request) bool {
 	return true
 }
 
@@ -116,21 +118,21 @@ func sleepyOkHandler(t time.Duration) http.Handler {
 func TestHTTPLimitsHandler(t *testing.T) {
 
 	tests := []struct {
-		limits []webbed.Limit
+		limits []limits.Limit
 		path   string
 		body   io.Reader
 		exp    int
 	}{
-		{[]webbed.Limit{}, "/", nil, http.StatusOK},
-		{[]webbed.Limit{exceededLimit}, "/", nil, http.StatusBadRequest},
-		{[]webbed.Limit{allowedLimit}, "/", nil, http.StatusOK},
-		{[]webbed.Limit{allowedLimit, exceededLimit}, "/", nil, http.StatusBadRequest},
+		{[]limits.Limit{}, "/", nil, http.StatusOK},
+		{[]limits.Limit{exceededLimit}, "/", nil, http.StatusBadRequest},
+		{[]limits.Limit{allowedLimit}, "/", nil, http.StatusOK},
+		{[]limits.Limit{allowedLimit, exceededLimit}, "/", nil, http.StatusBadRequest},
 	}
 
 	for _, test := range tests {
 
 		//t.Logf("%#v\n", test.limits)
-		lh := webbed.NewHTTPLimitsHandler(okHandler, test.limits...)
+		lh := limits.NewHTTPLimitsHandler(okHandler, test.limits...)
 
 		w := httptest.NewRecorder()
 		req := httptest.NewRequest("GET", test.path, test.body)
@@ -163,10 +165,10 @@ func TestRateLimit(t *testing.T) {
 
 	for _, test := range tests {
 
-		rl := webbed.RateLimit(test.limit, test.period, test.wait)
+		rl := limits.RateLimit(test.limit, test.period, test.wait)
 
 		//t.Logf("%#v\n", test.limits)
-		lh := webbed.NewHTTPLimitsHandler(sleepyOkHandler(time.Second/10), rl)
+		lh := limits.NewHTTPLimitsHandler(sleepyOkHandler(time.Second/10), rl)
 
 		w := httptest.NewRecorder()
 		req := httptest.NewRequest("GET", "/", nil)

@@ -1,6 +1,6 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
-package webbed
+package limits
 
 import _ "fmt"
 import _ "errors"
