@@ -1,6 +1,6 @@
 /* Copyright 2021 Kilobit Labs Inc. */
 
-package webbed_test
+package server_test
 
 import _ "fmt"
 import _ "errors"

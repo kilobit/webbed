@@ -1,6 +1,6 @@
 /* Copyright 2021 Kilobit Labs Inc. */
 
-package webbed
+package server
 
 import _ "fmt"
 import _ "errors"
