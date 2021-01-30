@@ -38,45 +38,45 @@ func TestNewRoute(t *testing.T) {
 
 func TestRoutesHTTPHandler(t *testing.T) {
 
- 	tests := []struct{
+	tests := []struct {
 		routes []string
-		path string
+		path   string
 		status int
-		body string
+		body   string
 	}{
- 		{[]string{"/"}, "/", 200, ""},
- 		{[]string{"/"}, "/bar", 404, ""},
- 
- 		{[]string{"/foo"}, "/", 404, ""},
- 		{[]string{"/foo"}, "/foo", 200, ""},
- 		{[]string{"/foo"}, "/bar", 404, ""},
- 
- 		{[]string{"/foo/bar"}, "/foo/bar", 200, ""},
- 		{[]string{"/foo/bar"}, "/foo", 404, ""},
- 
- 		{[]string{"/foo", "/foo/bar"}, "/foo", 200, ""},
- 		{[]string{"/foo", "/foo/bar"}, "/foo/bar", 200, ""},
- 
- 		{[]string{"/foo", "/foo/bar/bing"}, "/foo", 200, ""},
- 		{[]string{"/foo", "/foo/bar/bing"}, "/foo/bar", 404, ""},
- 		{[]string{"/foo", "/foo/bar/bing"}, "/foo/bar/bing", 200, ""},
+		{[]string{"/"}, "/", 200, ""},
+		{[]string{"/"}, "/bar", 404, ""},
+
+		{[]string{"/foo"}, "/", 404, ""},
+		{[]string{"/foo"}, "/foo", 200, ""},
+		{[]string{"/foo"}, "/bar", 404, ""},
+
+		{[]string{"/foo/bar"}, "/foo/bar", 200, ""},
+		{[]string{"/foo/bar"}, "/foo", 404, ""},
+
+		{[]string{"/foo", "/foo/bar"}, "/foo", 200, ""},
+		{[]string{"/foo", "/foo/bar"}, "/foo/bar", 200, ""},
+
+		{[]string{"/foo", "/foo/bar/bing"}, "/foo", 200, ""},
+		{[]string{"/foo", "/foo/bar/bing"}, "/foo/bar", 404, ""},
+		{[]string{"/foo", "/foo/bar/bing"}, "/foo/bar/bing", 200, ""},
 
 		{[]string{"/foo/bar", "/foo/bar/bing"}, "/foo/bar", 200, ""},
-		
- 		{[]string{"/foo/bar"}, "/foo/bar", 200, ""},
- 		{[]string{"/foo/bar", "/"}, "/foo/bar", 200, ""},
- 		{[]string{"/foo/bar", "/", "/foo/bar/bing"}, "/foo/bar", 200, ""},
+
+		{[]string{"/foo/bar"}, "/foo/bar", 200, ""},
+		{[]string{"/foo/bar", "/"}, "/foo/bar", 200, ""},
+		{[]string{"/foo/bar", "/", "/foo/bar/bing"}, "/foo/bar", 200, ""},
 		{[]string{"/foo/bar", "/", "/foo/bar/bing", "/foo/bar/bong"}, "/foo/bar", 200, ""},
 	}
 
 	for _, test := range tests {
 
 		//t.Log(test)
-		
+
 		foundHandler := NewFoundHandler()
 
 		notFoundHandler := NewNotFoundHandler()
-	
+
 		r := routes.New(notFoundHandler)
 		for _, route := range test.routes {
 			r.Add(route, foundHandler)
@@ -120,9 +120,9 @@ func TestRouteString(t *testing.T) {
 
 func TestShiftPath(t *testing.T) {
 
-	tests := []struct{
+	tests := []struct {
 		path string
-		exp []string
+		exp  []string
 	}{
 		{"", []string{""}},
 		{"/", []string{""}},
@@ -136,7 +136,7 @@ func TestShiftPath(t *testing.T) {
 
 		result := []string{}
 		rest := test.path
-		
+
 		for {
 			var path string
 			path, rest = routes.ShiftPath(rest)

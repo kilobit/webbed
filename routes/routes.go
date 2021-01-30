@@ -16,7 +16,7 @@ import "net/http"
 
 type Route struct {
 	nfh http.Handler
-	rs map[string]http.Handler
+	rs  map[string]http.Handler
 }
 
 func New(notFoundHandler http.Handler) *Route {
@@ -35,11 +35,11 @@ func (route Route) Add(path string, handler http.Handler) error {
 	if hascurrent {
 
 		subroute, isroute := current.(*Route)
-		
+
 		if isroute {
 			subroute.Add(rest, handler)
-			
-		// not a route
+
+			// not a route
 		} else {
 			// swap
 			subroute := New(route.nfh)
@@ -47,13 +47,13 @@ func (route Route) Add(path string, handler http.Handler) error {
 			subroute.Add(rest, handler)
 			route.rs[head] = subroute
 		}
-		
-	// no current
+
+		// no current
 	} else {
 		if isleaf {
 			route.rs[head] = handler
 
-		// Not a leaf	
+			// Not a leaf
 		} else {
 			subroute := New(route.nfh)
 			subroute.Add(rest, handler)
@@ -82,7 +82,7 @@ func (route Route) ToString(prefix string) string {
 	sb := &strings.Builder{}
 
 	for seg, handler := range route.rs {
-		
+
 		hstr := "handler"
 		r, ok := handler.(*Route)
 		if ok {
@@ -92,7 +92,7 @@ func (route Route) ToString(prefix string) string {
 		fmt.Fprintf(sb, "%s -> '%s' [%s]\n", prefix, seg, hstr)
 
 		if ok {
-			fmt.Fprint(sb, r.ToString(prefix + " -> " + seg))
+			fmt.Fprint(sb, r.ToString(prefix+" -> "+seg))
 		}
 	}
 
