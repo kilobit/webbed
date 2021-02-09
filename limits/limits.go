@@ -1,5 +1,7 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
+// Helpers for applying rate and other limits on inbound requests.
+//
 package limits
 
 import _ "fmt"
@@ -57,7 +59,7 @@ func (lh HTTPLimitsHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) 
 	lh.handler.ServeHTTP(w, req)
 }
 
-func NewHTTPLimitsHandler(handler http.Handler, limits ...Limit) *HTTPLimitsHandler {
+func New(handler http.Handler, limits ...Limit) *HTTPLimitsHandler {
 
 	return &HTTPLimitsHandler{
 		defaultMaxBytes,

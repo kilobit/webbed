@@ -77,7 +77,7 @@ func TestHTTPLimitsHandlerMaxBytes(t *testing.T) {
 			}
 		})
 
-		lh := limits.NewHTTPLimitsHandler(handler)
+		lh := limits.New(handler)
 
 		srv := httptest.NewServer(lh)
 		defer srv.Close()
@@ -132,7 +132,7 @@ func TestHTTPLimitsHandler(t *testing.T) {
 	for _, test := range tests {
 
 		//t.Logf("%#v\n", test.limits)
-		lh := limits.NewHTTPLimitsHandler(okHandler, test.limits...)
+		lh := limits.New(okHandler, test.limits...)
 
 		w := httptest.NewRecorder()
 		req := httptest.NewRequest("GET", test.path, test.body)
@@ -168,7 +168,7 @@ func TestRateLimit(t *testing.T) {
 		rl := limits.RateLimit(test.limit, test.period, test.wait)
 
 		//t.Logf("%#v\n", test.limits)
-		lh := limits.NewHTTPLimitsHandler(sleepyOkHandler(time.Second/10), rl)
+		lh := limits.New(sleepyOkHandler(time.Second/10), rl)
 
 		w := httptest.NewRecorder()
 		req := httptest.NewRequest("GET", "/", nil)
