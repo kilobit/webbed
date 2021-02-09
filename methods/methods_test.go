@@ -33,6 +33,7 @@ func TestHandleMethods(t *testing.T) {
 		{[]string{"GET"}, httptest.NewRequest("PUT", "/", nil), http.StatusMethodNotAllowed},
 		{[]string{"PUT", "GET"}, httptest.NewRequest("GET", "/", nil), http.StatusOK},
 		{[]string{"PUT", "GET"}, httptest.NewRequest("PUT", "/", nil), http.StatusOK},
+		{[]string{"PUT", "GET"}, httptest.NewRequest("POST", "/", nil), http.StatusMethodNotAllowed},
 	}
 
 	mh := methods.New(nil)
