@@ -1,6 +1,7 @@
 /* Copyright 2020 Kilobit Labs Inc. a*/
 
 // A simple structured logging package.
+//
 package logger
 
 import "fmt"

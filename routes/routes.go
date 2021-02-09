@@ -1,8 +1,13 @@
 /* Copyright 2021 Kilobit Labs Inc. */
 
+// Simple Web Routing in Golang.
+//
 // Inspired by Ben Hoyt and Axel Wagner's ShiftPath.  This package
 // encapsulates the ShiftPath technique, avoiding regexes but allowing
-// route definition in one place.
+// route definition in one place.  The route map is compiled into a
+// Trie for efficient lookups.
+//
+// TODO: Benchmark this router using Ben Hoyt's benchmarks.
 //
 package routes
 

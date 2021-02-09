@@ -18,7 +18,7 @@ type MethodHandler struct {
 var defaultErrorHandler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 
 	msg := fmt.Sprintf("The '%s' is not supported on this URL.", req.Method)
-	
+
 	http.Error(w, msg, http.StatusMethodNotAllowed)
 })
 
@@ -31,7 +31,7 @@ func New(errorHandler http.Handler) *MethodHandler {
 	if errorHandler == nil {
 		errorHandler = defaultErrorHandler
 	}
-	
+
 	return &MethodHandler{errorHandler}
 }
 
@@ -41,7 +41,7 @@ func New(errorHandler http.Handler) *MethodHandler {
 //
 // TODO: Consider pre-processing ToUpper on given methods.
 //
-func (mh *MethodHandler) HandleMethods(handler http.Handler, methods... string) http.Handler {
+func (mh *MethodHandler) HandleMethods(handler http.Handler, methods ...string) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		for _, method := range methods {

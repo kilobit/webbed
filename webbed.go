@@ -1,5 +1,7 @@
 /* Copyright 2021 Kilobit Labs Inc. */
 
+// Simple utilities for building Web Apps in Golang.
+//
 package webbed
 
 import _ "fmt"

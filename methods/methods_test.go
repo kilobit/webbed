@@ -23,10 +23,10 @@ var okHandler http.Handler = http.HandlerFunc(func(w http.ResponseWriter, req *h
 
 func TestHandleMethods(t *testing.T) {
 
-	tests := []struct{
+	tests := []struct {
 		methods []string
-		req *http.Request
-		status int
+		req     *http.Request
+		status  int
 	}{
 		{[]string{""}, httptest.NewRequest("GET", "/", nil), http.StatusMethodNotAllowed},
 		{[]string{"GET"}, httptest.NewRequest("GET", "/", nil), http.StatusOK},
@@ -37,7 +37,7 @@ func TestHandleMethods(t *testing.T) {
 	}
 
 	mh := methods.New(nil)
-	
+
 	for _, test := range tests {
 
 		w := httptest.NewRecorder()
