@@ -1,5 +1,7 @@
 /* Copyright 2021 Kilobit Labs Inc. */
 
+// A simple Web Server management package for Golang.
+//
 package server
 
 import _ "fmt"
@@ -46,7 +48,7 @@ func ServerOptLogger(lg *log.Logger) ServerOpt {
 	})
 }
 
-func NewHTTPServer(ctx context.Context, addr string, handler http.Handler, opts ...ServerOpt) *Server {
+func New(ctx context.Context, addr string, handler http.Handler, opts ...ServerOpt) *Server {
 
 	srv := &Server{
 		ctx,
