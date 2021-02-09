@@ -1,5 +1,7 @@
 /* Copyright 2020 Kilobit Labs Inc. */
 
+// Simple HTTP form handling for Golang.
+//
 package forms
 
 import "fmt"
@@ -56,6 +58,6 @@ func (fh HTTPFormHandler) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "Ok")
 }
 
-func NewHTTPFormHandler(handler FormHandler) *HTTPFormHandler {
+func New(handler FormHandler) *HTTPFormHandler {
 	return &HTTPFormHandler{handler}
 }

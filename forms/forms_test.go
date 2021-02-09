@@ -51,7 +51,7 @@ func TestHTTPFormHandlerPost(t *testing.T) {
 			return 0, nil
 		})
 
-		h := forms.NewHTTPFormHandler(f)
+		h := forms.New(f)
 
 		srv := httptest.NewServer(h)
 		defer srv.Close()
@@ -77,7 +77,7 @@ func TestHTTPFormHandlerGet(t *testing.T) {
 			return 0, nil
 		})
 
-		h := forms.NewHTTPFormHandler(f)
+		h := forms.New(f)
 
 		srv := httptest.NewServer(h)
 		defer srv.Close()
