@@ -1,4 +1,4 @@
-/* Copyright 2020 Kilobit Labs Inc. a*/
+/* Copyright 2021 Kilobit Labs Inc. */
 
 // A simple structured logging package.
 //

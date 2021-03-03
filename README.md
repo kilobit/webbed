@@ -70,6 +70,7 @@ Features
 - Log requests and custom parameters in any format, including JSON.
 - Load server parameters from the environment and propagate them
   through contexts.
+- A custom ResponseWriter implementation that captures statusCodes.
 - Use the parts you like, ignore the rest.
 
 Installation
