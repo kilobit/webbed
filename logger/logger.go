@@ -2,6 +2,9 @@
 
 // A simple structured logging package.
 //
+// Fields are automatically added Log data.
+// Parameters are Log data with pre-set names.
+//
 package logger
 
 import "fmt"
@@ -33,6 +36,13 @@ type ErrorHandler func(error)
 
 func NOPErrorHandler(error) {}
 
+func NewWriteErrorHandler(w io.Writer) ErrorHandler {
+
+	return ErrorHandler(func(err error) {
+		fmt.Fprintf(w, "Logger Error: %s", err.Error())
+	})
+}
+
 type Logger struct {
 	fields      map[string]FieldHandler
 	params      []string // nth parameter name
@@ -55,9 +65,15 @@ func New(w io.Writer) *Logger {
 	}
 }
 
+// Write errors encountered while logging to the writer.
+//
+func (lg *Logger) WriteLogErrors(w io.Writer) {
+	lg.ehandler = NewWriteErrorHandler(w)
+}
+
 // Log the given message and parameters.
 //
-func (lg Logger) Log(message interface{}, params ...interface{}) {
+func (lg *Logger) Log(message interface{}, params ...interface{}) {
 
 	var err error
 
