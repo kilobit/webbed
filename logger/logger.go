@@ -11,6 +11,7 @@ import "fmt"
 import _ "errors"
 import "io"
 import "strings"
+import "sort"
 import "time"
 import "crypto/rand"
 import "encoding/json"
@@ -26,24 +27,32 @@ func TimestampField() interface{} {
 	return time.Now()
 }
 
-type Encoder func(map[string]interface{}) ([]byte, error)
+type Encoder func(m map[string]interface{}, keys []string) ([]byte, error)
 
-var EncoderJSON Encoder = func(m map[string]interface{}) ([]byte, error) {
+var EncoderJSON Encoder = func(m map[string]interface{}, keys []string) ([]byte, error) {
 
 	return json.Marshal(m)
 }
 
-var EncoderTXT Encoder = func(m map[string]interface{}) ([]byte, error) {
+var EncoderTXT Encoder = func(m map[string]interface{}, keys []string) ([]byte, error) {
+
+	if keys == nil {
+		keys = make([]string, len(m))
+		i := 0
+		for k, _ := range m {
+			keys[i] = k
+			i++
+		}
+		sort.Strings(keys)
+	}
 
 	sb := &strings.Builder{}
 
 	fmt.Fprintf(sb, "Entry: %d\n", time.Now().Unix())
 
-	for key, obj := range m {
-		fmt.Fprintf(sb, "\t%s: %v\n", key, obj)
+	for _, key := range keys {
+		fmt.Fprintf(sb, "\t%s: %v\n", key, m[key])
 	}
-
-	sb.WriteString("\n")
 
 	return []byte(sb.String()), nil
 }
@@ -100,26 +109,33 @@ func (lg *Logger) Log(message interface{}, params ...interface{}) {
 	var err error
 
 	m := map[string]interface{}{}
+	keys := []string{lg.messageName}
 
 	for i, name := range lg.params {
 		param, ok := readElement(params, i)
 		if ok {
 			m[name] = param
+			keys = append(keys, name)
 		}
 	}
 
+	fkeys := []string{}
 	for name, fh := range lg.fields {
 		m[name] = fh()
+		fkeys = append(fkeys, name)
 	}
+	sort.Strings(fkeys)
+	keys = append(keys, fkeys...)
 
 	// Add extra params to the extras.
 	if len(params) > len(lg.params) {
 		m[lg.extrasName] = params[len(lg.params):]
+		keys = append(keys, lg.extrasName)
 	}
 
 	m[lg.messageName] = message
 
-	bs, err := lg.enc(m)
+	bs, err := lg.enc(m, keys)
 	lg.ehandler(err)
 
 	_, err = fmt.Fprintln(lg.w, string(bs))
