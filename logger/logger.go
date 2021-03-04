@@ -10,6 +10,7 @@ package logger
 import "fmt"
 import _ "errors"
 import "io"
+import "strings"
 import "time"
 import "crypto/rand"
 import "encoding/json"
@@ -32,6 +33,21 @@ var EncoderJSON Encoder = func(m map[string]interface{}) ([]byte, error) {
 	return json.Marshal(m)
 }
 
+var EncoderTXT Encoder = func(m map[string]interface{}) ([]byte, error) {
+
+	sb := &strings.Builder{}
+
+	fmt.Fprintf(sb, "Entry: %d\n", time.Now().Unix())
+
+	for key, obj := range m {
+		fmt.Fprintf(sb, "\t%s: %v\n", key, obj)
+	}
+
+	sb.WriteString("\n")
+
+	return []byte(sb.String()), nil
+}
+
 type ErrorHandler func(error)
 
 func NOPErrorHandler(error) {}
@@ -39,7 +55,9 @@ func NOPErrorHandler(error) {}
 func NewWriteErrorHandler(w io.Writer) ErrorHandler {
 
 	return ErrorHandler(func(err error) {
-		fmt.Fprintf(w, "Logger Error: %s", err.Error())
+		if err != nil {
+			fmt.Fprintf(w, "Logger Error: %s", err.Error())
+		}
 	})
 }
 
@@ -63,6 +81,10 @@ func New(w io.Writer) *Logger {
 		w,
 		NOPErrorHandler,
 	}
+}
+
+func (lg *Logger) EncodeAsText() {
+	lg.enc = EncoderTXT
 }
 
 // Write errors encountered while logging to the writer.
@@ -98,6 +120,8 @@ func (lg *Logger) Log(message interface{}, params ...interface{}) {
 	m[lg.messageName] = message
 
 	bs, err := lg.enc(m)
+	lg.ehandler(err)
+
 	_, err = fmt.Fprintln(lg.w, string(bs))
 	lg.ehandler(err)
 }
