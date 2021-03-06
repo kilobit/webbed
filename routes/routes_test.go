@@ -95,11 +95,11 @@ func TestRoutesHTTPHandler(t *testing.T) {
 
 		res := rw.Result()
 
-		assert.Expect(t, test.status, res.StatusCode)
+		assert.Expect(t, test.status, res.StatusCode, test, res)
 
 		body, err := ioutil.ReadAll(res.Body)
-		assert.Ok(t, err)
-		assert.Expect(t, test.body, string(body))
+		assert.Ok(t, err, test, req)
+		assert.Expect(t, test.body, string(body), test, req)
 	}
 }
 
