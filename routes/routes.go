@@ -109,6 +109,22 @@ func (route Route) String() string {
 	return route.ToString("")
 }
 
+// Invoke the handler with the path returned to it's original state
+// before being routed.
+//
+// As the router processes path segments it removes the handled
+// prefixes.  Some http.Handlers such as the http.FileServer will
+// behave poorly when the path has been changed.  Passing the
+// FileServer to this Handler will clear up that problem.
+//
+func ResetPath(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		req.URL, _ = url.Parse(req.RequestURI)
+
+		h.ServeHTTP(w, req)
+	})
+}
+
 // Shift a Path element from the URL.
 //
 func ShiftPath(p string) (head, tail string) {

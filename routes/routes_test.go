@@ -5,6 +5,7 @@ package routes_test
 import _ "fmt"
 import _ "errors"
 import "io/ioutil"
+import "net/url"
 import "net/http"
 
 import "kilobit.ca/go/webbed/routes"
@@ -12,6 +13,7 @@ import "kilobit.ca/go/webbed/routes"
 import "testing"
 import "net/http/httptest"
 import "kilobit.ca/go/tested/assert"
+import "kilobit.ca/go/tested/handlers"
 
 func TestRoutesTest(t *testing.T) {
 	assert.Expect(t, true, true)
@@ -116,6 +118,21 @@ func TestRouteString(t *testing.T) {
 	//fmt.Print(r)
 
 	//assert.Expect(t, "", r.String())
+}
+
+func TestResetPath(t *testing.T) {
+
+	w := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/some/path", nil)
+	req.URL, _ = url.Parse("/some/other/path/")
+
+	routes.ResetPath(handlers.OkHandler).ServeHTTP(w, req)
+
+	result := w.Result()
+
+	assert.Expect(t, http.StatusOK, result.StatusCode, req, result)
+
+	assert.Expect(t, "/some/path", req.URL.String())
 }
 
 func TestShiftPath(t *testing.T) {
